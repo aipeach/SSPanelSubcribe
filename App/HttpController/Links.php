@@ -113,6 +113,7 @@ class Links extends Controller
         $this->response()->withHeader('Content-type', ' application/octet-stream; charset=utf-8');
         $this->response()->withHeader('Cache-Control', 'no-store, no-cache, must-revalidate');
         $this->response()->withHeader('Content-Disposition', ' attachment; filename=' . $filename);
+        $this->response()->withHeader('profile-update-interval', '24');
         $this->response()->withHeader(
             'Subscription-Userinfo',
             (' upload=' . $user->u
