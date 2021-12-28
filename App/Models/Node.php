@@ -64,8 +64,15 @@ class Node extends Models
             if ($mu_user == null) {
                 return null;
             }
-            $mu_user->obfs_param = $user->getMuMd5();
-            $mu_user->protocol_param = $user->id . ':' . $user->passwd;
+            // 如果混淆和协议均为SS原生且为单端口的，即判断为AEAD单端口类型，密码配置为用户自身密码
+            if ($mu_user->obfs == "plain" && $mu_user->protocol == "origin"){
+                $mu_user->passwd = $user->passwd;
+                $mu_user->obfs_param     = "";
+                $mu_user->protocol_param = "";
+            }else{
+                $mu_user->obfs_param = $user->getMuMd5();
+                $mu_user->protocol_param = $user->id . ':' . $user->passwd;
+            }
             $user = $mu_user;
             $node_name .= (Config::getInstance()->getConf('SUB.disable_sub_mu_port') ? '' : ' - ' . $mu_port . ' 单端口');
         }
