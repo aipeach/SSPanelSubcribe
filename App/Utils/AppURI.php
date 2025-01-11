@@ -279,53 +279,6 @@ class AppURI
             return $return;
         }
         switch ($item['type']) {
-            case 'ss':
-                $method = ['rc4-md5-6', 'camellia-128-cfb', 'camellia-192-cfb', 'camellia-256-cfb', 'bf-cfb', 'cast5-cfb', 'des-cfb', 'des-ede3-cfb', 'idea-cfb', 'rc2-cfb', 'seed-cfb', 'salsa20', 'chacha20', 'xsalsa20', 'none'];
-                if (in_array($item['method'], $method)) {
-                    // 不支持的
-                    break;
-                }
-                $return = [
-                    'name'        => $item['remark'],
-                    'type'        => 'ss',
-                    'server'      => $item['address'],
-                    'port'        => $item['port'],
-                    'cipher'      => $item['method'],
-                    'password'    => $item['passwd'],
-                    'udp'         => true
-                ];
-                if ($item['obfs'] != 'plain') {
-                    switch ($item['obfs']) {
-                        case 'simple_obfs_http':
-                            $return['plugin'] = 'obfs';
-                            $return['plugin-opts']['mode'] = 'http';
-                            break;
-                        case 'simple_obfs_tls':
-                            $return['plugin'] = 'obfs';
-                            $return['plugin-opts']['mode'] = 'tls';
-                            break;
-                        case 'v2ray':
-                            $return['plugin'] = 'v2ray-plugin';
-                            $return['plugin-opts']['mode'] = 'websocket';
-                            if ($item['tls'] == 'tls') {
-                                $return['plugin-opts']['tls'] = true;
-                                if ($item['verify_cert'] == false) {
-                                    $return['plugin-opts']['skip-cert-verify'] = true;
-                                }
-                            }
-                            $return['plugin-opts']['host'] = $item['host'];
-                            $return['plugin-opts']['path'] = $item['path'];
-                            break;
-                    }
-                    if ($item['obfs'] != 'v2ray') {
-                        if ($item['obfs_param'] != '') {
-                            $return['plugin-opts']['host'] = $item['obfs_param'];
-                        } else {
-                            $return['plugin-opts']['host'] = 'windowsupdate.windows.com';
-                        }
-                    }
-                }
-                break;
             case 'ssr':
                 // if (
                 //     in_array($item['method'], ['rc4-md5-6', 'des-ede3-cfb', 'xsalsa20', 'none'])
@@ -348,41 +301,6 @@ class AppURI
                     'protocolparam'   => $item['protocol_param'],
                     'obfs'            => $item['obfs'],
                     'obfsparam'       => $item['obfs_param']
-                ];
-                break;
-            case 'vmess':
-                if (!in_array($item['net'], array('ws', 'tcp'))) {
-                    break;
-                }
-                $return = [
-                    'name'    => $item['remark'],
-                    'type'    => 'vmess',
-                    'server'  => $item['add'],
-                    'port'    => $item['port'],
-                    'uuid'    => $item['id'],
-                    'alterId' => $item['aid'],
-                    'cipher'  => 'auto',
-                    'udp'     => true
-                ];
-                if ($item['net'] == 'ws') {
-                    $return['network'] = 'ws';
-                    $return['ws-path'] = $item['path'];
-                    $return['ws-headers']['Host'] = ($item['host'] != '' ? $item['host'] : $item['add']);
-                }
-                if ($item['tls'] == 'tls') {
-                    $return['tls'] = true;
-                    if ($item['verify_cert'] == false) {
-                        $return['skip-cert-verify'] = true;
-                    }
-                }
-                break;
-            case 'trojan':
-                $return = [
-                    'name'        => $item['remark'],
-                    'type'        => 'trojan',
-                    'server'      => $item['address'],
-                    'port'        => $item['port'],
-                    'password'    => $item['passwd']
                 ];
                 break;
         }
